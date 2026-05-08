@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Guest {
+  id             String          @id @default(uuid())
+  name           String
+  numberOfGuests Int
+  checkInDate    DateTime
+  checkOutDate   DateTime
+  idProofType    String?
+  notes          String?
+  status         GuestStatus     @default(BOOKING_CONFIRMED)
+  hasIdProof     Boolean         @default(false)
+  checkInTime    DateTime?
+  checkOutTime   DateTime?
+  totalNights    Int             @default(0)
+  amountByGuest  Float           @default(0)
+  hostPayout     Float           @default(0)
+  bookingType    BookingType     @default(APP)
+  createdAt      DateTime        @default(now())
+  documents      GuestDocument[]
+  notifications  Notification[]
+}
+
+enum BookingType {
+  APP
+  OFFLINE
+}
+
+
+model GuestDocument {
+  id                    String        @id @default(uuid())
+  guestId               String
+  filePath              String
+  publicId              String?
+  fileType              String
+  documentOwner         DocumentOwner @default(MAIN_GUEST)
+  accompanyingGuestName String?
+  createdAt             DateTime      @default(now())
+  guest                 Guest         @relation(fields: [guestId], references: [id], onDelete: Cascade)
+}
+
+enum DocumentOwner {
+  MAIN_GUEST
+  ACCOMPANYING_GUEST
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  guestId   String
+  type      NotificationType
+  message   String
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  guest     Guest            @relation(fields: [guestId], references: [id], onDelete: Cascade)
+}
+
+enum GuestStatus {
+  BOOKING_CONFIRMED
+  ID_PENDING
+  ID_CONFIRMED
+  CHECKED_IN
+  CHECKED_OUT
+}
+
+enum NotificationType {
+  CHECKIN_MESSAGE_GENERATED
+  GUEST_CHECKED_IN
+  GUEST_CHECKED_OUT
+}
+
+model MonthlyReport {
+  id             String   @id @default(uuid())
+  month          Int      // 1-12
+  year           Int
+  deductions     Json?    // Array of { item: string, amount: number, datePaid: string }
+  reportFilePath String?
+  reportPublicId String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([month, year])
+}
