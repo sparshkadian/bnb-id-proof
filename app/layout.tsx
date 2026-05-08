@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "BnB ID Proof Manager",
-  description: "Manage guest ID records for your BnB securely.",
+  title: "Orélia",
+  description: "BnB ID Proof Manager",
 };
 
 import { Toaster } from "react-hot-toast";

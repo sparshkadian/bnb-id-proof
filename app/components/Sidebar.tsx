@@ -39,10 +39,7 @@ export function Sidebar() {
     <aside className="w-64 border-r border-[#E2E8F0] bg-[#F8FAFC] flex flex-col hidden md:flex flex-shrink-0 h-screen sticky top-0">
       <div className="p-6">
         <div className="mb-8 px-2">
-          <h1 className="text-2xl font-bold text-[#1E3A8A]">HostPro</h1>
-          <p className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold mt-1">
-            Premium Management
-          </p>
+          <h1 className="text-2xl font-bold text-[#1E3A8A]">Orélia</h1>
         </div>
         <nav className="space-y-1">
           {navItems.map((item) => {
