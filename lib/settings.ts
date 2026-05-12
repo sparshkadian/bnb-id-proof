@@ -25,7 +25,19 @@ export function getSettings(): AppSettings {
   try {
     if (fs.existsSync(SETTINGS_FILE)) {
       const data = fs.readFileSync(SETTINGS_FILE, 'utf8');
-      return { ...DEFAULT_SETTINGS, ...JSON.parse(data) };
+      const storedSettings = JSON.parse(data);
+      
+      // Merge with defaults but ensure empty URLs in settings.json don't override env vars
+      const merged = { ...DEFAULT_SETTINGS, ...storedSettings };
+      
+      if (!merged.neonUrl && process.env.DATABASE_URL) {
+        merged.neonUrl = process.env.DATABASE_URL;
+      }
+      if (!merged.supabaseUrl && process.env.SUPABASE_DATABASE_URL) {
+        merged.supabaseUrl = process.env.SUPABASE_DATABASE_URL;
+      }
+      
+      return merged;
     }
   } catch (error) {
     console.error("Error reading settings:", error);

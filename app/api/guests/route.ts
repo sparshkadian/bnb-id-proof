@@ -116,8 +116,11 @@ export async function GET() {
       orderBy: { createdAt: "desc" },
     });
     return NextResponse.json({ guests });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching guests:", error);
-    return NextResponse.json({ error: "Failed to fetch guests" }, { status: 500 });
+    return NextResponse.json({ 
+      error: "Failed to fetch guests", 
+      message: error?.message || "Unknown error" 
+    }, { status: 500 });
   }
 }
