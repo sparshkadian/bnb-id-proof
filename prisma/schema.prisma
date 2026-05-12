@@ -13,7 +13,6 @@ model Guest {
   numberOfGuests Int
   checkInDate    DateTime
   checkOutDate   DateTime
-  idProofType    String?
   notes          String?
   status         GuestStatus     @default(BOOKING_CONFIRMED)
   hasIdProof     Boolean         @default(false)
@@ -40,6 +39,7 @@ model GuestDocument {
   filePath              String
   publicId              String?
   fileType              String
+  idProofType           String?
   documentOwner         DocumentOwner @default(MAIN_GUEST)
   accompanyingGuestName String?
   createdAt             DateTime      @default(now())

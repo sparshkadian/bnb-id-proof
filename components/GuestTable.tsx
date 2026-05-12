@@ -8,7 +8,6 @@ type Guest = {
   numberOfGuests: number;
   checkInDate: string;
   checkOutDate: string;
-  idProofType: string;
   documents: { id: string }[];
 };
 
@@ -30,7 +29,6 @@ export default function GuestTable({ guests, onDelete }: { guests: Guest[], onDe
                 <th className="py-3 px-4">Name</th>
                 <th className="py-3 px-4">Stay Duration</th>
                 <th className="py-3 px-4">Guests</th>
-                <th className="py-3 px-4">ID Type</th>
                 <th className="py-3 px-4">Docs</th>
                 <th className="py-3 px-4 text-right">Actions</th>
               </tr>
@@ -44,11 +42,6 @@ export default function GuestTable({ guests, onDelete }: { guests: Guest[], onDe
                     {format(new Date(guest.checkOutDate), "MMM d, yyyy")}
                   </td>
                   <td className="py-3 px-4">{guest.numberOfGuests}</td>
-                  <td className="py-3 px-4">
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-                      {guest.idProofType}
-                    </span>
-                  </td>
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-1 text-gray-500">
                       <FileText className="w-4 h-4" />

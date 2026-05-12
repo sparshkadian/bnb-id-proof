@@ -28,8 +28,8 @@ export async function POST(req: NextRequest) {
     const files = formData.getAll("documents") as File[];
     const documentNames = formData.getAll("documentNames") as string[];
     const documentOwners = formData.getAll("documentOwners") as string[];
+    const idProofTypes = formData.getAll("idProofTypes") as string[];
     const accompanyingGuestNames = formData.getAll("accompanyingGuestNames") as string[];
-    const idProofType = formData.get("idProofType") as string;
 
     const uploadedDocuments = [];
     if (files && files.length > 0) {
@@ -51,6 +51,7 @@ export async function POST(req: NextRequest) {
           filePath,
           publicId,
           fileType: file.type,
+          idProofType: idProofTypes[i] || null,
           documentOwner: owner,
           accompanyingGuestName: accompanyingName,
         });
@@ -66,7 +67,6 @@ export async function POST(req: NextRequest) {
         notes,
         status: uploadedDocuments.length > 0 ? "ID_CONFIRMED" : "BOOKING_CONFIRMED",
         hasIdProof: uploadedDocuments.length > 0,
-        idProofType: idProofType || null,
         totalNights,
         amountByGuest,
         hostPayout,

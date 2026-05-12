@@ -13,9 +13,32 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Orélia",
-  description: "BnB ID Proof Manager",
+import { getSettings } from "@/lib/settings";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = getSettings();
+  return {
+    title: settings.companyName || "Orélia",
+    description: "BnB ID Proof Manager",
+    icons: {
+      icon: settings.favicon || "/favicon.ico",
+    },
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: "default",
+      title: settings.companyName || "Oryva",
+    },
+    formatDetection: {
+      telephone: false,
+    },
+  };
+}
+
+export const viewport = {
+  themeColor: "#1E3A8A",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 import { Toaster } from "react-hot-toast";

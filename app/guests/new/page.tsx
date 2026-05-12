@@ -60,14 +60,11 @@ export default function AddGuestPage() {
       data.append("notes", formData.notes);
       data.append("amountPaid", formData.amountPaid);
 
-      if (filesWithInfo.length > 0) {
-        data.append("idProofType", filesWithInfo[0].idType);
-      }
-      
       for (const info of filesWithInfo) {
         data.append("documents", info.file);
         data.append("documentNames", info.customName);
         data.append("documentOwners", info.owner);
+        data.append("idProofTypes", info.idType);
         if (info.owner === "ACCOMPANYING_GUEST") {
           data.append("accompanyingGuestNames", info.guestName);
         }

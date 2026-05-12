@@ -216,7 +216,7 @@ export default function IdUploadUtility({
       if (documentOwner === "ACCOMPANYING_GUEST") {
         formData.append("accompanyingGuestNames", guestNameInput);
       }
-      formData.append("idProofType", idType);
+      formData.append("idProofTypes", idType);
 
       const res = await fetch(`/api/guests/${guestId}`, {
         method: "PATCH",

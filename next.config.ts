@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   turbopack: {
-    root: "C:/Users/spars/Desktop/BnB/idproof",
+    root: "C:/Users/spars/Desktop/BnB/bnb-id-proof",
   },
 };
 

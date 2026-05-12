@@ -86,7 +86,7 @@ export async function PATCH(
     const checkOutTime = formData.get("checkOutTime");
     const amountByGuest = formData.get("amountByGuest");
     const files = formData.getAll("documents") as File[];
-    const idProofType = formData.get("idProofType") as string;
+    const idProofTypes = formData.getAll("idProofTypes") as string[];
     
     // Check 24-hour edit lock past check-out date
     const currentGuest = await prisma.guest.findUnique({ where: { id } });
@@ -108,9 +108,8 @@ export async function PATCH(
     }
     */
 
-    const updateData: any = {};
     
-    if (idProofType) updateData.idProofType = idProofType;
+    const updateData: any = {};
     
     if (status) {
       if (status === "CHECKED_OUT") {
@@ -164,6 +163,7 @@ export async function PATCH(
           filePath,
           publicId,
           fileType: file.type,
+          idProofType: idProofTypes[i] || null,
           documentOwner: owner,
           accompanyingGuestName: accompanyingName,
         });

@@ -29,7 +29,7 @@ function DocumentItem({ doc }: { doc: any }) {
             {fileName}
           </span>
           <span className="text-[10px] font-medium text-gray-400 uppercase tracking-wider">
-            {doc.fileType?.split('/')[1] || 'Document'}
+            {doc.idProofType || doc.fileType?.split('/')[1] || 'Document'}
           </span>
         </div>
       </div>
@@ -183,13 +183,10 @@ export default function GuestDetailPage() {
         formData.append("documents", info.file);
         formData.append("documentNames", info.customName);
         formData.append("documentOwners", info.owner);
+        formData.append("idProofTypes", info.idType);
         if (info.owner === "ACCOMPANYING_GUEST") {
           formData.append("accompanyingGuestNames", info.guestName);
         }
-      }
-
-      if (filesInfo.length > 0) {
-        formData.append("idProofType", filesInfo[0].idType);
       }
 
       const res = await fetch(`/api/guests/${id}`, {
@@ -222,30 +219,6 @@ export default function GuestDetailPage() {
 
   const getEffectiveStatus = () => {
     if (!guest) return "CREATED";
-    
-    // If status is already manually set to Checked Out, keep it
-    if (guest.status === "CHECKED_OUT") return "CHECKED_OUT";
-
-    const now = new Date();
-    const checkIn = new Date(guest.checkInDate);
-    const checkOut = new Date(guest.checkOutDate);
-    
-    // Set auto-times: 1 PM for check-in, 11 AM for check-out
-    const autoCheckInTime = new Date(checkIn);
-    autoCheckInTime.setHours(13, 0, 0, 0);
-    
-    const autoCheckOutTime = new Date(checkOut);
-    autoCheckOutTime.setHours(11, 0, 0, 0);
-
-    // Auto Check-out logic: If current time is past check-out date 11 AM
-    if (now >= autoCheckOutTime) return "CHECKED_OUT";
-    
-    // If status is already manually set to Checked In, keep it
-    if (guest.status === "CHECKED_IN") return "CHECKED_IN";
-
-    // Auto Check-in logic: If current time is past check-in date 1 PM
-    if (now >= autoCheckInTime) return "CHECKED_IN";
-
     return guest.status;
   };
 
@@ -482,7 +455,6 @@ export default function GuestDetailPage() {
                       <Clock className="w-4 h-4" /> Pending
                     </span>
                   )}
-                  <span className="text-base font-bold text-gray-900 ml-2">{guest.idProofType}</span>
                 </div>
               </div>
             </div>

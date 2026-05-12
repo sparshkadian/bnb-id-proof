@@ -1,12 +1,14 @@
 "use client";
 
-import { Search, Bell, HelpCircle, Check, ExternalLink } from "lucide-react";
+import { Search, Bell, Check, Menu, HelpCircle } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
 
+interface HeaderProps {
+  onMenuClick?: () => void;
+}
 
-export function Header() {
+export function Header({ onMenuClick }: HeaderProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [showNotifications, setShowNotifications] = useState(false);
@@ -68,8 +70,15 @@ export function Header() {
 
 
   return (
-    <header className="h-20 bg-white border-b border-[#E2E8F0] px-8 flex items-center justify-between sticky top-0 z-10">
-      <div className="flex items-center flex-1">
+    <header className="h-20 bg-white border-b border-[#E2E8F0] px-4 md:px-8 flex items-center justify-between sticky top-0 z-10 md:hidden">
+      <div className="flex items-center gap-4 flex-1">
+        <button 
+          onClick={onMenuClick}
+          className="p-2 hover:bg-gray-100 rounded-lg md:hidden text-gray-600"
+        >
+          <Menu className="w-6 h-6" />
+        </button>
+        
         <div className="relative w-96 hidden md:block">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <Search className="h-5 w-5 text-gray-400" />
@@ -82,11 +91,11 @@ export function Header() {
         </div>
       </div>
 
-      <div className="flex-1 flex justify-center">
+      <div className="hidden sm:flex flex-1 justify-center">
         <h2 className="text-lg font-semibold text-gray-900">{pageTitle}</h2>
       </div>
 
-      <div className="flex items-center justify-end flex-1 gap-4 text-gray-500">
+      <div className="flex items-center justify-end flex-1 gap-2 md:gap-4 text-gray-500">
         <div className="relative" ref={dropdownRef}>
           <button 
             onClick={() => setShowNotifications(!showNotifications)}
@@ -99,7 +108,7 @@ export function Header() {
           </button>
 
           {showNotifications && (
-            <div className="absolute right-0 mt-2 w-96 bg-white rounded-2xl shadow-xl border border-[#E2E8F0] overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="absolute right-0 mt-2 w-[calc(100vw-2rem)] sm:w-96 bg-white rounded-2xl shadow-xl border border-[#E2E8F0] overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
               <div className="p-4 border-b border-[#E2E8F0] flex items-center justify-between">
                 <h3 className="font-bold text-gray-900">Notifications</h3>
                 <span className="text-xs font-bold text-[#1E3A8A] bg-blue-50 px-2 py-1 rounded-md">{unreadCount} Unread</span>
@@ -151,7 +160,7 @@ export function Header() {
             </div>
           )}
         </div>
-        <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+        <button className="p-2 hover:bg-gray-100 rounded-full transition-colors hidden sm:block">
           <HelpCircle className="w-5 h-5" />
         </button>
       </div>
