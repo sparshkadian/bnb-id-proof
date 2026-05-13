@@ -16,9 +16,9 @@ const DEFAULT_SETTINGS: AppSettings = {
   companyName: "Orélia",
   companyLogo: "",
   favicon: "",
-  dbProvider: "NEON",
-  neonUrl: process.env.DATABASE_URL || "",
-  supabaseUrl: process.env.SUPABASE_DATABASE_URL || "",
+  dbProvider: "SUPABASE",
+  neonUrl: process.env.NEON_DATABASE_URL || "",
+  supabaseUrl: process.env.SUPABASE_DATABASE_URL || process.env.DATABASE_URL || "",
 };
 
 export function getSettings(): AppSettings {
@@ -30,11 +30,11 @@ export function getSettings(): AppSettings {
       // Merge with defaults but ensure empty URLs in settings.json don't override env vars
       const merged = { ...DEFAULT_SETTINGS, ...storedSettings };
       
-      if (!merged.neonUrl && process.env.DATABASE_URL) {
-        merged.neonUrl = process.env.DATABASE_URL;
+      if (!merged.neonUrl && (process.env.NEON_DATABASE_URL || process.env.DATABASE_URL)) {
+        merged.neonUrl = process.env.NEON_DATABASE_URL || process.env.DATABASE_URL || "";
       }
-      if (!merged.supabaseUrl && process.env.SUPABASE_DATABASE_URL) {
-        merged.supabaseUrl = process.env.SUPABASE_DATABASE_URL;
+      if (!merged.supabaseUrl && (process.env.SUPABASE_DATABASE_URL || process.env.DATABASE_URL)) {
+        merged.supabaseUrl = process.env.SUPABASE_DATABASE_URL || process.env.DATABASE_URL || "";
       }
       
       return merged;

@@ -13,9 +13,10 @@ interface ModernSelectProps {
   onChange: (value: string) => void;
   className?: string;
   placeholder?: string;
+  icon?: React.ReactNode;
 }
 
-export default function ModernSelect({ options, value, onChange, className, placeholder }: ModernSelectProps) {
+export default function ModernSelect({ options, value, onChange, className, placeholder, icon }: ModernSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -36,12 +37,18 @@ export default function ModernSelect({ options, value, onChange, className, plac
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between px-4 py-2.5 bg-white border border-[#E2E8F0] rounded-xl text-sm font-semibold text-gray-700 hover:border-[#1E3A8A] transition-all focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]/10"
+        className={clsx(
+          "w-full flex items-center justify-between px-3 md:px-4 py-2 md:py-2.5 bg-white border border-[#E2E8F0] rounded-xl text-xs md:text-sm font-semibold text-gray-700 hover:border-[#1E3A8A] transition-all focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]/10",
+          icon && "justify-center sm:justify-between"
+        )}
       >
-        <span className={clsx(!selectedOption && "text-gray-400")}>
-          {selectedOption ? selectedOption.label : placeholder || "Select..."}
-        </span>
-        <ChevronDown className={clsx("w-4 h-4 text-gray-400 transition-transform", isOpen && "rotate-180")} />
+        <div className="flex items-center gap-2">
+          {icon && <span className="flex-shrink-0">{icon}</span>}
+          <span className={clsx(!selectedOption && "text-gray-400", icon && "hidden sm:inline")}>
+            {selectedOption ? selectedOption.label : placeholder || "Select..."}
+          </span>
+        </div>
+        <ChevronDown className={clsx("w-3 h-3 md:w-4 md:h-4 text-gray-400 transition-transform", isOpen && "rotate-180", icon && "hidden sm:inline")} />
       </button>
 
       {isOpen && (

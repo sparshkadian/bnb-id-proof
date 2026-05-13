@@ -90,19 +90,19 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="max-w-[1000px] mx-auto p-8 space-y-8 animate-in fade-in duration-500">
-      <div className="flex items-center justify-between">
+    <div className="max-w-[1000px] mx-auto p-4 md:p-8 space-y-6 md:space-y-8 animate-in fade-in duration-500">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-gray-900 tracking-tight flex items-center gap-3">
-            <Settings className="w-8 h-8 text-[#1E3A8A]" />
+          <h1 className="text-xl md:text-3xl font-black text-gray-900 tracking-tight flex items-center gap-2 md:gap-3">
+            <Settings className="w-5 h-5 md:w-8 md:h-8 text-[#1E3A8A]" />
             Application Settings
           </h1>
-          <p className="text-sm font-medium text-gray-500 mt-1 uppercase tracking-wider">Configure your workspace and branding</p>
+          <p className="text-[12px] md:text-sm font-medium text-gray-500 mt-0.5 md:mt-1 uppercase tracking-wider">Configure your workspace and branding</p>
         </div>
         <button 
           onClick={handleSave}
           disabled={saving}
-          className="px-6 py-2.5 bg-[#1E3A8A] text-white rounded-xl text-sm font-bold flex items-center gap-2 hover:bg-blue-900 transition-all shadow-lg shadow-blue-900/10 active:scale-95 disabled:opacity-50"
+          className="hidden sm:flex px-6 py-2.5 bg-[#1E3A8A] text-white rounded-xl text-sm font-bold items-center gap-2 hover:bg-blue-900 transition-all shadow-lg shadow-blue-900/10 active:scale-95 disabled:opacity-50"
         >
           {saving ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
           Save Changes
@@ -110,7 +110,7 @@ export default function SettingsPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-white rounded-2xl shadow-sm border border-[#E2E8F0] p-8 space-y-6">
+        <div className="bg-white rounded-2xl shadow-sm border border-[#E2E8F0] p-6 md:p-8 space-y-6">
           <div className="flex items-center gap-3 pb-4 border-b border-gray-100">
             <Building2 className="w-5 h-5 text-[#1E3A8A]" />
             <h2 className="text-lg font-bold text-gray-900">Branding</h2>
@@ -154,10 +154,21 @@ export default function SettingsPage() {
                 </div>
               </div>
             </div>
+            {/* Mobile Save Button */}
+            <div className="pt-4 sm:hidden">
+              <button 
+                onClick={handleSave}
+                disabled={saving}
+                className="w-full py-3 bg-[#1E3A8A] text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 hover:bg-blue-900 transition-all active:scale-95 disabled:opacity-50"
+              >
+                {saving ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                Save Changes
+              </button>
+            </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-[#E2E8F0] p-8 space-y-6">
+        <div className="hidden md:block bg-white rounded-2xl shadow-sm border border-[#E2E8F0] p-8 space-y-6">
           <div className="flex items-center gap-3 pb-4 border-b border-gray-100">
             <Database className="w-5 h-5 text-[#1E3A8A]" />
             <h2 className="text-lg font-bold text-gray-900">Database Configuration</h2>

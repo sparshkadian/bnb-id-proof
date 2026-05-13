@@ -165,7 +165,7 @@ export default function GuestListPage() {
         
         {/* Unified Filter Row - Horizontal on all screens */}
         <div className="flex flex-row items-center gap-2 md:gap-3 w-full lg:w-auto overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0 no-scrollbar">
-          <div className="relative flex-shrink-0 w-48 md:w-64">
+          <div className="relative flex-shrink-0 w-32 sm:w-48 md:w-64 transition-all duration-300 focus-within:w-48 sm:focus-within:w-64">
             <Search className="w-3.5 h-3.5 md:w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
@@ -177,7 +177,8 @@ export default function GuestListPage() {
           </div>
 
           <ModernSelect 
-            className="w-36 md:w-44"
+            className="w-12 sm:w-36 md:w-44"
+            icon={<FileText className="w-3.5 h-3.5 md:w-4 h-4" />}
             options={[
               { value: "ALL", label: "All Bookings" },
               { value: "APP", label: "App Only" },
@@ -190,7 +191,7 @@ export default function GuestListPage() {
           <div className="relative">
             <button 
               onClick={() => setShowCalendar(!showCalendar)}
-              className={`flex items-center gap-2 px-3 md:px-4 py-2 md:py-2.5 bg-white border rounded-xl text-xs md:text-sm font-semibold transition-all whitespace-nowrap
+              className={`flex items-center justify-center sm:justify-start gap-2 px-3 md:px-4 py-2 md:py-2.5 bg-white border rounded-xl text-xs md:text-sm font-semibold transition-all whitespace-nowrap
                 ${startDate && endDate ? 'border-[#1E3A8A] text-[#1E3A8A] bg-blue-50/30' : 'border-[#E2E8F0] text-gray-700 hover:bg-gray-50'}`}
             >
               <CalendarIcon className="w-3.5 h-3.5 md:w-4 h-4" />
@@ -198,9 +199,6 @@ export default function GuestListPage() {
                 {startDate && endDate 
                   ? `${format(startDate, "MMM d")} - ${format(endDate, "MMM d")}`
                   : "Filter by Date"}
-              </span>
-              <span className="sm:hidden">
-                {startDate && endDate ? "Dates Set" : "Date"}
               </span>
             </button>
             
