@@ -52,7 +52,10 @@ export default function ModernSelect({ options, value, onChange, className, plac
       </button>
 
       {isOpen && (
-        <div className="absolute z-50 mt-2 w-full bg-white border border-[#E2E8F0] rounded-2xl shadow-xl overflow-hidden py-1.5 animate-in fade-in zoom-in-95 duration-100">
+        <div className={clsx(
+          "absolute z-50 mt-2 bg-white border border-[#E2E8F0] rounded-2xl shadow-xl overflow-hidden py-1.5 animate-in fade-in zoom-in-95 duration-100",
+          icon ? "w-48 right-0 sm:w-full sm:left-0" : "w-full left-0"
+        )}>
           {options.map((option) => (
             <button
               key={option.value}

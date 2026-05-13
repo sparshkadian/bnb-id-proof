@@ -164,7 +164,7 @@ export default function GuestListPage() {
         </div>
         
         {/* Unified Filter Row - Horizontal on all screens */}
-        <div className="flex flex-row items-center gap-2 md:gap-3 w-full lg:w-auto overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0 no-scrollbar">
+        <div className="flex flex-row items-center gap-2 md:gap-3 w-full lg:w-auto pb-2 lg:pb-0">
           <div className="relative flex-shrink-0 w-32 sm:w-48 md:w-64 transition-all duration-300 focus-within:w-48 sm:focus-within:w-64">
             <Search className="w-3.5 h-3.5 md:w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
