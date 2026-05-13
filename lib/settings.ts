@@ -6,7 +6,6 @@ const SETTINGS_FILE = path.join(process.cwd(), 'data', 'settings.json');
 export interface AppSettings {
   companyName: string;
   companyLogo: string; // Base64 or URL
-  favicon: string; // Base64 or URL
   dbProvider: 'NEON' | 'SUPABASE';
   neonUrl: string;
   supabaseUrl: string;
@@ -15,7 +14,6 @@ export interface AppSettings {
 const DEFAULT_SETTINGS: AppSettings = {
   companyName: "Orélia",
   companyLogo: "",
-  favicon: "",
   dbProvider: "SUPABASE",
   neonUrl: process.env.NEON_DATABASE_URL || "",
   supabaseUrl: process.env.SUPABASE_DATABASE_URL || process.env.DATABASE_URL || "",

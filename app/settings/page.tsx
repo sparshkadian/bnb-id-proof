@@ -126,7 +126,7 @@ export default function SettingsPage() {
                 placeholder="Enter company name"
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2">Company Logo</label>
                 <div className="relative group cursor-pointer">
@@ -137,19 +137,6 @@ export default function SettingsPage() {
                       <Upload className="w-6 h-6 text-gray-400" />
                     )}
                     <input type="file" onChange={(e) => handleFileChange(e, 'companyLogo')} className="absolute inset-0 opacity-0 cursor-pointer" />
-                  </div>
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">Favicon</label>
-                <div className="relative group cursor-pointer">
-                  <div className="w-full h-32 bg-[#F8FAFC] border-2 border-dashed border-[#E2E8F0] rounded-xl flex flex-col items-center justify-center overflow-hidden hover:border-[#1E3A8A] transition-colors">
-                    {settings.favicon ? (
-                      <img src={settings.favicon} alt="Favicon" className="w-12 h-12 object-contain" />
-                    ) : (
-                      <Upload className="w-6 h-6 text-gray-400" />
-                    )}
-                    <input type="file" onChange={(e) => handleFileChange(e, 'favicon')} className="absolute inset-0 opacity-0 cursor-pointer" />
                   </div>
                 </div>
               </div>

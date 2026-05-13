@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect, Fragment, useRef } from "react";
 import Link from "next/link";
 import { Search, Eye, Trash2, FileText, User, Download, Plus, Calendar as CalendarIcon, ChevronLeft, ChevronRight, X, Shield, Upload, CheckCircle2, AlertCircle } from "lucide-react";
 import toast from "react-hot-toast";
@@ -28,6 +28,9 @@ export default function GuestListPage() {
 
   const [formData, setFormData] = useState({ name: "", checkInDate: "", checkOutDate: "", notes: "", amountPaid: "0", bookingType: "APP" });
   const [submitting, setSubmitting] = useState(false);
+  
+  // Refs for outside click handling
+  const calendarRef = useRef<HTMLDivElement>(null);
   
   const fetchGuests = async () => {
     try {
@@ -60,6 +63,14 @@ export default function GuestListPage() {
 
   useEffect(() => {
     fetchGuests();
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
+        setShowCalendar(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleDelete = async (id: string) => {
@@ -188,7 +199,7 @@ export default function GuestListPage() {
             onChange={setBookingTypeFilter}
           />
 
-          <div className="relative">
+          <div className="relative" ref={calendarRef}>
             <button 
               onClick={() => setShowCalendar(!showCalendar)}
               className={`flex items-center justify-center sm:justify-start gap-2 px-3 md:px-4 py-2 md:py-2.5 bg-white border rounded-xl text-xs md:text-sm font-semibold transition-all whitespace-nowrap

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Users, UserPlus, Settings, Bell, X } from "lucide-react";
+import { LayoutDashboard, Users, UserPlus, Settings, Bell, X, LogOut } from "lucide-react";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
@@ -121,19 +121,13 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       </div>
 
       <div className="mt-auto p-6 border-t border-[#E2E8F0]">
-        <div className="flex items-center gap-3 px-2 cursor-pointer group">
-          <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden relative border border-gray-300">
-            <div className="absolute inset-0 bg-[#1E3A8A] text-white flex items-center justify-center font-bold text-sm">
-              MP
-            </div>
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-gray-900 group-hover:text-[#1E3A8A] transition-colors">
-              Manager Profile
-            </p>
-            <p className="text-xs text-gray-500">View Account</p>
-          </div>
-        </div>
+        <Link 
+          href="/login"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors group"
+        >
+          <LogOut className="w-5 h-5 text-red-500 group-hover:scale-110 transition-transform" />
+          Logout
+        </Link>
       </div>
     </>
   );

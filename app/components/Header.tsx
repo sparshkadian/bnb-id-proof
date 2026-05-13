@@ -58,6 +58,19 @@ export function Header({ onMenuClick }: HeaderProps) {
     }
   };
 
+  const markAllAsRead = async () => {
+    try {
+      const res = await fetch("/api/notifications/read-all", {
+        method: "POST",
+      });
+      if (res.ok) {
+        setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
   // Logic to determine page title based on route
@@ -155,7 +168,12 @@ export function Header({ onMenuClick }: HeaderProps) {
                 )}
               </div>
               <div className="p-3 bg-[#F8FAFC] text-center border-t border-[#E2E8F0]">
-                <button className="text-xs font-bold text-gray-500 hover:text-[#1E3A8A] transition-colors">Clear All Notifications</button>
+                <button 
+                  onClick={markAllAsRead}
+                  className="text-xs font-bold text-gray-500 hover:text-[#1E3A8A] transition-colors"
+                >
+                  Clear All Notifications
+                </button>
               </div>
             </div>
           )}
