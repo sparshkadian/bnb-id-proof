@@ -472,14 +472,17 @@ export default function GuestListPage() {
 
 
 
-                  <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">Check-in Date</label>
-                    <input type="date" value={formData.checkInDate} onChange={e => setFormData({...formData, checkInDate: e.target.value})} required className="w-full px-4 py-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#1E3A8A] h-12" />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">Check-out Date</label>
-                    <input type="date" value={formData.checkOutDate} onChange={e => setFormData({...formData, checkOutDate: e.target.value})} required className="w-full px-4 py-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#1E3A8A] h-12" />
+                  <div className="md:col-span-2">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[10px] sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2 whitespace-nowrap">Check-in Date</label>
+                        <input type="date" value={formData.checkInDate} onChange={e => setFormData({...formData, checkInDate: e.target.value})} required className="w-full px-2 sm:px-4 py-2 sm:py-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-xs sm:text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#1E3A8A] h-10 sm:h-12" />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] sm:text-sm font-bold text-gray-700 mb-1 sm:mb-2 whitespace-nowrap">Check-out Date</label>
+                        <input type="date" value={formData.checkOutDate} onChange={e => setFormData({...formData, checkOutDate: e.target.value})} required className="w-full px-2 sm:px-4 py-2 sm:py-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-xs sm:text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#1E3A8A] h-10 sm:h-12" />
+                      </div>
+                    </div>
                   </div>
 
                   <div>
