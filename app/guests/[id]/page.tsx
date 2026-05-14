@@ -284,7 +284,7 @@ export default function GuestDetailPage() {
                 </span>
                 {isLocked && (
                   <div className="w-full md:w-auto mt-1 md:mt-0">
-                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-red-50 text-red-700 border border-red-100 rounded-full text-xs font-bold animate-pulse">
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-red-50 text-red-700 border border-red-100 rounded-full text-xs font-bold">
                       <X className="w-3 h-3" /> Locked
                     </div>
                   </div>
@@ -309,7 +309,7 @@ export default function GuestDetailPage() {
                 
                 return (
                   <div key={step.key} className="relative z-10 flex flex-col items-center">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center border-4 transition-colors duration-500 ${
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center border-4 transition-colors duration-500 z-[1] ${
                       isCompleted ? "bg-[#1E3A8A] border-[#1E3A8A] text-white" :
                       isCurrent ? "bg-white border-[#1E3A8A] text-[#1E3A8A]" :
                       "bg-white border-gray-100 text-gray-300"
@@ -405,7 +405,7 @@ export default function GuestDetailPage() {
                   {new Date(guest.checkOutDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                 </p>
               </div>
-              <div className="col-span-2 grid grid-cols-2 gap-6 pt-4 border-t border-gray-50">
+              <div className="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 pt-4 border-t border-gray-50">
                 <div>
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Check-in Time</p>
                   <div className="relative group">
@@ -498,14 +498,17 @@ export default function GuestDetailPage() {
                 </div>
               </div>
               <div className="flex flex-col sm:flex-row items-end gap-3">
-                <label className={`cursor-pointer px-6 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 transition-all ${
+                <label className={`cursor-pointer px-4 sm:px-6 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 transition-all ${
                   isLocked ? 'bg-gray-100 text-gray-400 cursor-not-allowed' :
                   !guest.hasIdProof 
                     ? 'bg-[#1E3A8A] text-white hover:bg-blue-900 shadow-lg shadow-blue-900/10' 
                     : 'bg-[#F8FAFC] hover:bg-gray-100 text-[#1E3A8A] border border-[#E2E8F0]'
                 }`}>
                   <Upload className="w-4 h-4" />
-                  {uploading ? "Uploading..." : guest.hasIdProof ? "Upload More" : "Upload ID Proof"}
+                  <span className="hidden sm:inline">
+                    {uploading ? "Uploading..." : guest.hasIdProof ? "Upload More" : "Upload ID Proof"}
+                  </span>
+                  {!guest.hasIdProof && <span className="sm:hidden">Upload</span>}
                   <input type="file" className="sr-only" multiple onChange={handleFileUpload} disabled={uploading || isLocked} />
                 </label>
               </div>
