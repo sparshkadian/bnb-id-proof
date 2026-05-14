@@ -57,7 +57,7 @@ export default function DashboardPage() {
   }, [fetchData]);
 
   const handleAddDeduction = () => {
-    setDeductions([...deductions, { item: "", amount: 0, datePaid: new Date().toISOString().split('T')[0] }]);
+    setDeductions([...deductions, { item: "", amount: 0, datePaid: new Date().toISOString().split('T')[0], status: 'NOT_PAID' }]);
   };
 
   const handleRemoveDeduction = (index: number) => {
@@ -67,18 +67,20 @@ export default function DashboardPage() {
   };
 
   const handleDeductionChange = (index: number, field: string, value: any) => {
-    const newDeductions = [...deductions];
-    newDeductions[index][field] = value;
-    setDeductions(newDeductions);
+    setDeductions(prev => {
+      const next = [...prev];
+      next[index] = { ...next[index], [field]: value };
+      return next;
+    });
   };
 
-  const handleSave = async (reportFile?: File) => {
+  const handleSave = async (reportFile?: File, deductionsOverride?: any[]) => {
     setSaving(true);
     try {
       const formData = new FormData();
       formData.append("month", month.toString());
       formData.append("year", year.toString());
-      formData.append("deductions", JSON.stringify(deductions));
+      formData.append("deductions", JSON.stringify(deductionsOverride || deductions));
       if (reportFile) {
         formData.append("report", reportFile);
       }
@@ -99,6 +101,14 @@ export default function DashboardPage() {
     } finally {
       setSaving(false);
     }
+  };
+
+  const toggleStatus = (index: number) => {
+    const newStatus = deductions[index].status === 'PAID' ? 'NOT_PAID' : 'PAID';
+    const updated = [...deductions];
+    updated[index] = { ...updated[index], status: newStatus };
+    setDeductions(updated);
+    handleSave(undefined, updated);
   };
 
   const kpis = [
@@ -177,7 +187,7 @@ export default function DashboardPage() {
                 <div className="space-y-4">
                   {deductions.map((d, i) => (
                     <div key={i} className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end animate-in fade-in slide-in-from-top-2 duration-300">
-                      <div className="md:col-span-5">
+                      <div className="md:col-span-4">
                         <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5 ml-1">Item Description</label>
                         <input 
                           type="text" 
@@ -187,7 +197,7 @@ export default function DashboardPage() {
                           className="w-full px-4 py-2.5 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-sm font-bold text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#1E3A8A]"
                         />
                       </div>
-                      <div className="md:col-span-3">
+                      <div className="md:col-span-2">
                         <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5 ml-1">Amount</label>
                         <div className="relative group">
                           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">₹</span>
@@ -207,6 +217,20 @@ export default function DashboardPage() {
                           onChange={(e) => handleDeductionChange(i, 'datePaid', e.target.value)}
                           className="w-full px-4 py-2.5 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl text-sm font-bold text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#1E3A8A]"
                         />
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5 ml-1">Status</label>
+                        <button
+                          onClick={() => toggleStatus(i)}
+                          disabled={saving}
+                          className={`w-full py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                            d.status === 'PAID' 
+                              ? 'bg-emerald-100 text-emerald-700 border border-emerald-200 shadow-sm' 
+                              : 'bg-gray-100 text-gray-400 border border-gray-200'
+                          } ${saving ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        >
+                          {d.status === 'PAID' ? 'PAID' : 'NOT PAID'}
+                        </button>
                       </div>
                       <div className="md:col-span-1 flex justify-center">
                         <button 

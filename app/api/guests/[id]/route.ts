@@ -47,6 +47,19 @@ export async function DELETE(
       return NextResponse.json({ error: "Guest not found" }, { status: 404 });
     }
 
+    // Check lock
+    if (guest.checkOutDate) {
+      const checkOutDate = new Date(guest.checkOutDate);
+      const lockDeadline = new Date(checkOutDate.getTime() + 48 * 60 * 60 * 1000);
+      const now = new Date();
+      if (now > lockDeadline) {
+        return NextResponse.json(
+          { error: "This record is locked as it is more than 48 hours past the check-out date." },
+          { status: 403 }
+        );
+      }
+    }
+
     // Delete files
     for (const doc of guest.documents) {
       if (doc.filePath.startsWith("/uploads/")) {
@@ -94,19 +107,17 @@ export async function PATCH(
       return NextResponse.json({ error: "Guest not found" }, { status: 404 });
     }
 
-    /* Temporarily disabled for historical data upload
     if (currentGuest.checkOutDate) {
       const checkOutDate = new Date(currentGuest.checkOutDate);
-      const lockDeadline = new Date(checkOutDate.getTime() + 24 * 60 * 60 * 1000);
+      const lockDeadline = new Date(checkOutDate.getTime() + 48 * 60 * 60 * 1000);
       const now = new Date();
       if (now > lockDeadline) {
         return NextResponse.json(
-          { error: "This record is locked as it is more than 24 hours past the check-out date." },
+          { error: "This record is locked as it is more than 48 hours past the check-out date." },
           { status: 403 }
         );
       }
     }
-    */
 
     
     const updateData: any = {};

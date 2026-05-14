@@ -37,22 +37,27 @@ export default function GuestListPage() {
       setLoading(true);
       const res = await fetch(`/api/guests?t=${Date.now()}`);
       const data = await res.json();
-      const mappedGuests = (data.guests || []).map((g: any) => ({
-        id: g.id,
-        name: g.name,
-        checkIn: new Date(g.checkInDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-        checkOut: new Date(g.checkOutDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-        start: new Date(g.checkInDate).getDate(),
-        end: new Date(g.checkOutDate).getDate(),
-        month: new Date(g.checkInDate).getMonth(),
-        year: new Date(g.checkInDate).getFullYear(),
-        guests: g.numberOfGuests,
-        docs: g.documents?.length || 0,
-        status: g.status,
-        amountPaid: g.amountByGuest,
-        bookingType: g.bookingType,
-        rawCheckIn: g.checkInDate
-      }));
+      const mappedGuests = (data.guests || []).map((g: any) => {
+        const checkOutDate = new Date(g.checkOutDate);
+        const isLocked = g.checkOutDate && (new Date() > new Date(checkOutDate.getTime() + 48 * 60 * 60 * 1000));
+        return {
+          id: g.id,
+          name: g.name,
+          checkIn: new Date(g.checkInDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          checkOut: new Date(g.checkOutDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          start: new Date(g.checkInDate).getDate(),
+          end: new Date(g.checkOutDate).getDate(),
+          month: new Date(g.checkInDate).getMonth(),
+          year: new Date(g.checkInDate).getFullYear(),
+          guests: g.numberOfGuests,
+          docs: g.documents?.length || 0,
+          status: g.status,
+          amountPaid: g.amountByGuest,
+          bookingType: g.bookingType,
+          rawCheckIn: g.checkInDate,
+          isLocked
+        };
+      });
       setGuests(mappedGuests);
     } catch (err) {
       console.error(err);
@@ -176,7 +181,7 @@ export default function GuestListPage() {
         
         {/* Unified Filter Row - Horizontal on all screens */}
         <div className="flex flex-row items-center gap-2 md:gap-3 w-full lg:w-auto pb-2 lg:pb-0">
-          <div className="relative flex-shrink-0 w-32 sm:w-48 md:w-64 transition-all duration-300 focus-within:w-48 sm:focus-within:w-64">
+          <div className="relative flex-shrink-0 w-32 sm:`w-48 md:w-64 transition-all duration-300 focus-within:w-48 sm:focus-within:w-64">
             <Search className="w-3.5 h-3.5 md:w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
@@ -324,7 +329,12 @@ export default function GuestListPage() {
                                 <Link href={`/guests/${guest.id}`} className="p-2 text-gray-400 hover:text-[#1E3A8A] hover:bg-blue-50 rounded-lg transition-colors">
                                   <Eye className="w-4 h-4" />
                                 </Link>
-                                <button onClick={() => handleDelete(guest.id)} className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                                <button 
+                                  onClick={() => handleDelete(guest.id)} 
+                                  disabled={guest.isLocked}
+                                  className={`p-2 rounded-lg transition-colors ${guest.isLocked ? 'text-gray-200 cursor-not-allowed' : 'text-gray-400 hover:text-red-600 hover:bg-red-50'}`}
+                                  title={guest.isLocked ? "Record is locked (48h post check-out)" : "Delete Record"}
+                                >
                                   <Trash2 className="w-4 h-4" />
                                 </button>
                               </div>
@@ -383,7 +393,11 @@ export default function GuestListPage() {
                           <Link href={`/guests/${guest.id}`} className="p-2 text-gray-400 hover:text-[#1E3A8A] bg-gray-50 rounded-lg">
                             <Eye className="w-4 h-4" />
                           </Link>
-                          <button onClick={() => handleDelete(guest.id)} className="p-2 text-gray-400 hover:text-red-600 bg-gray-50 rounded-lg">
+                          <button 
+                            onClick={() => handleDelete(guest.id)} 
+                            disabled={guest.isLocked}
+                            className={`p-2 rounded-lg ${guest.isLocked ? 'text-gray-200' : 'text-gray-400 hover:text-red-600 bg-gray-50'}`}
+                          >
                             <Trash2 className="w-4 h-4" />
                           </button>
                         </div>

@@ -239,13 +239,9 @@ export default function GuestDetailPage() {
     return idx < currentStepIndex;
   };
 
-  // Temporarily disabled for historical data upload
-  const isLocked = false;
-  /*
   const isLocked = guest && guest.checkOutDate && (
-    new Date() > new Date(new Date(guest.checkOutDate).getTime() + 24 * 60 * 60 * 1000)
+    new Date() > new Date(new Date(guest.checkOutDate).getTime() + 48 * 60 * 60 * 1000)
   );
-  */
 
 
   if (loading) {
@@ -415,7 +411,8 @@ export default function GuestDetailPage() {
                       type="time" 
                       value={tempData.checkInTime}
                       onChange={(e) => setTempData(prev => ({ ...prev, checkInTime: e.target.value }))}
-                      className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 py-1.5 text-sm font-bold text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#1E3A8A] transition-all"
+                      disabled={isLocked}
+                      className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 py-1.5 text-sm font-bold text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#1E3A8A] transition-all disabled:opacity-50"
                     />
                   </div>
                 </div>
@@ -426,7 +423,8 @@ export default function GuestDetailPage() {
                       type="time" 
                       value={tempData.checkOutTime}
                       onChange={(e) => setTempData(prev => ({ ...prev, checkOutTime: e.target.value }))}
-                      className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 py-1.5 text-sm font-bold text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#1E3A8A] transition-all"
+                      disabled={isLocked}
+                      className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-3 py-1.5 text-sm font-bold text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#1E3A8A] transition-all disabled:opacity-50"
                     />
                   </div>
                 </div>
@@ -439,7 +437,8 @@ export default function GuestDetailPage() {
                     type="number" 
                     value={tempData.amountByGuest}
                     onChange={(e) => setTempData(prev => ({ ...prev, amountByGuest: e.target.value }))}
-                    className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg pl-7 pr-3 py-1.5 text-sm font-bold text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#1E3A8A] transition-all"
+                    disabled={isLocked}
+                    className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg pl-7 pr-3 py-1.5 text-sm font-bold text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#1E3A8A] transition-all disabled:opacity-50"
                   />
                 </div>
               </div>

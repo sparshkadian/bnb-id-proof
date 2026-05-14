@@ -33,15 +33,19 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    const deductions = (report?.deductions as any[]) || [];
-    // Sort deductions by datePaid in ascending order
-    deductions.sort((a, b) => {
+    const rawDeductions = (report?.deductions as any[]) || [];
+    // Sort and ensure status exists for all items
+    const deductions = rawDeductions.map(d => ({
+      ...d,
+      status: d.status || 'PAID' // Default legacy items to PAID
+    })).sort((a, b) => {
       const dateA = new Date(a.datePaid || 0).getTime();
       const dateB = new Date(b.datePaid || 0).getTime();
       return dateA - dateB;
     });
 
     const totalDeductions = deductions.reduce((sum, d) => {
+      if (d.status !== 'PAID') return sum;
       const amount = parseFloat(d.amount);
       return sum + (isNaN(amount) ? 0 : amount);
     }, 0);
@@ -77,7 +81,10 @@ export async function POST(req: NextRequest) {
     const updateData: any = { month, year };
 
     if (deductionsStr) {
-      const parsedDeductions = JSON.parse(deductionsStr);
+      const parsedDeductions = JSON.parse(deductionsStr).map((d: any) => ({
+        ...d,
+        status: d.status || 'PAID'
+      }));
       // Sort before saving
       parsedDeductions.sort((a: any, b: any) => {
         const dateA = new Date(a.datePaid || 0).getTime();
