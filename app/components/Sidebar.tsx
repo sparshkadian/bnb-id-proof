@@ -101,7 +101,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                   isActive
                     ? "bg-white text-[#1E3A8A] shadow-sm border border-[#E2E8F0]"
                     : "text-gray-600 hover:bg-white hover:text-[#1E3A8A]"
-                }`}
+                } ${item.name === "Notifications" ? "hidden md:flex" : "flex"}`}
               >
                 <div className="flex items-center justify-between w-full">
                   <div className="flex items-center gap-3">

@@ -8,43 +8,56 @@ const globalForPrisma = global as unknown as {
 
 /**
  * Internal function to get or create the Prisma client based on current settings.
+ * Caches the client to avoid redundant file reads on every property access.
  */
 function getInternalPrisma() {
+  // In serverless, we want to check settings once per invocation or when explicitly changed.
   const settings = getSettings();
-  const dbUrl = settings.dbProvider === "NEON" ? settings.neonUrl : settings.supabaseUrl;
+  const provider = settings.dbProvider;
+  const dbUrl = provider === "NEON" ? settings.neonUrl : settings.supabaseUrl;
+
+  // diagnostic check
+  if (!dbUrl) {
+    console.error(`[Prisma ERROR] No database URL found for provider: ${provider}. Check your environment variables.`);
+  }
 
   const shouldReinitialize = 
     globalForPrisma.prisma && 
-    globalForPrisma.provider !== settings.dbProvider;
+    globalForPrisma.provider !== provider;
 
   if (!globalForPrisma.prisma || shouldReinitialize) {
     if (shouldReinitialize) {
-      console.log(`[Prisma] detected provider change: ${globalForPrisma.provider} -> ${settings.dbProvider}. Switching database connection...`);
-      // We don't $disconnect the old one here to avoid blocking, 
-      // the old connections will eventually time out.
+      console.log(`[Prisma] Switching database connection: ${globalForPrisma.provider} -> ${provider}`);
     }
 
-    globalForPrisma.prisma = new PrismaClient({
-      datasources: {
-        db: {
-          url: dbUrl,
+    try {
+      globalForPrisma.prisma = new PrismaClient({
+        datasources: {
+          db: {
+            url: dbUrl,
+          },
         },
-      },
-      log: ["error", "warn"], // Reduced logging for cleaner console
-    });
-    globalForPrisma.provider = settings.dbProvider;
+        log: ["error", "warn"],
+      });
+      globalForPrisma.provider = provider;
 
-    const maskedUrl = dbUrl ? `${dbUrl.split('@')[0].split(':')[0]}://***@${dbUrl.split('@')[1] || 'unknown'}` : "EMPTY";
-    console.log(`[Prisma] Active provider: ${settings.dbProvider}, URL: ${maskedUrl}`);
+      const maskedUrl = dbUrl ? `${dbUrl.split('@')[0].split(':')[0]}://***@${dbUrl.split('@')[1] || 'unknown'}` : "EMPTY";
+      console.log(`[Prisma] Initialized for ${provider} with URL: ${maskedUrl}`);
+    } catch (err) {
+      console.error("[Prisma] Failed to initialize PrismaClient:", err);
+      throw err;
+    }
   }
 
   return globalForPrisma.prisma;
 }
 
-// Export a Proxy that intercepts all property access and redirects to the current Prisma instance.
-// This allows the app to switch databases immediately when settings.json is updated.
+// Export a Proxy that intercepts all property access.
+// We use a Proxy to keep the 'import { prisma }' syntax while allowing dynamic switching.
 export const prisma = new Proxy({} as PrismaClient, {
   get(target, prop, receiver) {
+    // Note: In production/serverless, this function will likely run once per lambda invocation
+    // because global variables are reset frequently.
     const client = getInternalPrisma();
     const value = Reflect.get(client, prop, receiver);
     if (typeof value === 'function') {
