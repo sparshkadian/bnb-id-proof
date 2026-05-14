@@ -171,7 +171,7 @@ export default function GuestListPage() {
       <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-6 md:mb-8 gap-4 md:gap-6">
         <div className="flex-shrink-0">
           <h1 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight">Guest List</h1>
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Manage all registrations</p>
+          {/* <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Manage all registrations</p> */}
         </div>
         
         {/* Unified Filter Row - Horizontal on all screens */}
