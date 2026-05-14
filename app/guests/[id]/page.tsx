@@ -268,7 +268,7 @@ export default function GuestDetailPage() {
             </div>
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">{guest.name}</h1>
-              <div className="flex items-center gap-4">
+              <div className="flex flex-wrap items-center gap-3">
                 <div className="flex items-center gap-2 text-sm font-medium text-gray-500">
                   <User className="w-4 h-4" /> {guest.numberOfGuests} Guest{guest.numberOfGuests !== 1 && 's'}
                 </div>
@@ -283,8 +283,10 @@ export default function GuestDetailPage() {
                   {effectiveStatus?.replace("_", " ")}
                 </span>
                 {isLocked && (
-                  <div className="flex items-center gap-1.5 px-2.5 py-1 bg-red-50 text-red-700 border border-red-100 rounded-full text-xs font-bold animate-pulse">
-                    <X className="w-3 h-3" /> Locked
+                  <div className="w-full md:w-auto mt-1 md:mt-0">
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-red-50 text-red-700 border border-red-100 rounded-full text-xs font-bold animate-pulse">
+                      <X className="w-3 h-3" /> Locked
+                    </div>
                   </div>
                 )}
               </div>
@@ -314,7 +316,7 @@ export default function GuestDetailPage() {
                     }`}>
                       {isCompleted ? <CheckCircle2 className="w-5 h-5" /> : idx + 1}
                     </div>
-                    <span className={`absolute top-12 whitespace-nowrap text-xs font-bold ${
+                    <span className={`absolute top-12 w-16 sm:w-24 text-center text-[10px] sm:text-xs font-bold leading-tight ${
                       isCurrent ? "text-[#1E3A8A]" : "text-gray-500"
                     }`}>
                       {step.label}
