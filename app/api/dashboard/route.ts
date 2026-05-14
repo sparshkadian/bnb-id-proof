@@ -34,6 +34,13 @@ export async function GET(req: NextRequest) {
     });
 
     const deductions = (report?.deductions as any[]) || [];
+    // Sort deductions by datePaid in ascending order
+    deductions.sort((a, b) => {
+      const dateA = new Date(a.datePaid || 0).getTime();
+      const dateB = new Date(b.datePaid || 0).getTime();
+      return dateA - dateB;
+    });
+
     const totalDeductions = deductions.reduce((sum, d) => {
       const amount = parseFloat(d.amount);
       return sum + (isNaN(amount) ? 0 : amount);
@@ -70,7 +77,14 @@ export async function POST(req: NextRequest) {
     const updateData: any = { month, year };
 
     if (deductionsStr) {
-      updateData.deductions = JSON.parse(deductionsStr);
+      const parsedDeductions = JSON.parse(deductionsStr);
+      // Sort before saving
+      parsedDeductions.sort((a: any, b: any) => {
+        const dateA = new Date(a.datePaid || 0).getTime();
+        const dateB = new Date(b.datePaid || 0).getTime();
+        return dateA - dateB;
+      });
+      updateData.deductions = parsedDeductions;
     }
 
     if (reportFile && reportFile.size > 0) {

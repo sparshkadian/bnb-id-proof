@@ -39,7 +39,11 @@ export default function DashboardPage() {
         const data = await res.json();
         setStats(data.stats);
         setReport(data.report);
-        setDeductions(data.report?.deductions || []);
+        const rawDeductions = data.report?.deductions || [];
+        const sortedDeductions = [...rawDeductions].sort((a: any, b: any) => {
+          return new Date(a.datePaid || 0).getTime() - new Date(b.datePaid || 0).getTime();
+        });
+        setDeductions(sortedDeductions);
       }
     } catch (err) {
       toast.error("Failed to fetch dashboard data");
