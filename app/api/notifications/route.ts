@@ -3,7 +3,15 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET() {
   try {
+    const twoDaysAgo = new Date();
+    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+
     const notifications = await prisma.notification.findMany({
+      where: {
+        createdAt: {
+          gte: twoDaysAgo
+        }
+      },
       orderBy: { createdAt: "desc" },
       include: {
         guest: {

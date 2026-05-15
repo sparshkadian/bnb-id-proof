@@ -308,7 +308,7 @@ export default function GuestDetailPage() {
                 const isCurrent = idx === currentStepIndex && !isCompleted;
                 
                 return (
-                  <div key={step.key} className="relative z-10 flex flex-col items-center">
+                  <div key={step.key} className="relative z-[1] flex flex-col items-center">
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center border-4 transition-colors duration-500 z-[1] ${
                       isCompleted ? "bg-[#1E3A8A] border-[#1E3A8A] text-white" :
                       isCurrent ? "bg-white border-[#1E3A8A] text-[#1E3A8A]" :
