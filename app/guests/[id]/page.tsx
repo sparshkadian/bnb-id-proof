@@ -48,6 +48,7 @@ export default function GuestDetailPage() {
   const id = params.id as string;
   const [guest, setGuest] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [companyName, setCompanyName] = useState("Oryva");
 
   useEffect(() => {
     const fetchGuest = async () => {
@@ -66,6 +67,23 @@ export default function GuestDetailPage() {
     if (id) fetchGuest();
   }, [id]);
 
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const res = await fetch("/api/settings");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.settings?.companyName) {
+            setCompanyName(data.settings.companyName);
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchSettings();
+  }, []);
+
   const router = useRouter();
   const [updating, setUpdating] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -74,6 +92,12 @@ export default function GuestDetailPage() {
   // File upload modal state
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [pendingFiles, setPendingFiles] = useState<File[]>([]);
+
+  const formattedCompany = companyName
+    .toLowerCase()
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
 
   useEffect(() => {
     if (guest) {
@@ -576,12 +600,13 @@ export default function GuestDetailPage() {
                       onClick={() => {
                         const message = `Dear ${guest.name},
 
-Your booking has been successfully confirmed.
-Duration of Stay: ${new Date(guest.checkInDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} to ${new Date(guest.checkOutDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} (${guest.totalNights} nights)
+Your booking at **Kyoto | ${formattedCompany}** has been successfully confirmed.
+
+**Duration of Stay:** ${new Date(guest.checkInDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} to ${new Date(guest.checkOutDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} (${guest.totalNights} night${guest.totalNights === 1 ? '' : 's'})
 
 Kindly share a valid government-issued ID proof for all guests at your earliest convenience to complete the check-in process.
 
-The check-in details will be shared with you 24 hours prior to your stay.
+The check-in details will be shared with you **on the day of check-in**.
 
 Please feel free to reach out if you have any questions.
 
@@ -598,12 +623,13 @@ Thank you!`;
                   <div className="bg-white/70 rounded-xl p-4 border border-[#C3DAFE] text-xs text-gray-600 font-medium leading-relaxed whitespace-pre-line">
                     {`Dear ${guest.name},
 
-Your booking has been successfully confirmed.
-Duration of Stay: ${new Date(guest.checkInDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} to ${new Date(guest.checkOutDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} (${guest.totalNights} nights)
+Your booking at **Kyoto | ${formattedCompany}** has been successfully confirmed.
+
+**Duration of Stay:** ${new Date(guest.checkInDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} to ${new Date(guest.checkOutDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} (${guest.totalNights} night${guest.totalNights === 1 ? '' : 's'})
 
 Kindly share a valid government-issued ID proof for all guests at your earliest convenience to complete the check-in process.
 
-The check-in details will be shared with you 24 hours prior to your stay.
+The check-in details will be shared with you **on the day of check-in**.
 
 Please feel free to reach out if you have any questions.
 

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { uploadFile } from "@/lib/fileUpload";
+import { getSettings } from "@/lib/settings";
 
 export async function POST(req: NextRequest) {
   try {
@@ -81,14 +82,23 @@ export async function POST(req: NextRequest) {
     });
 
     // Auto Generate Check-in Message notification
+    const settings = getSettings();
+    const companyName = settings.companyName || "Oryva";
+    const formattedCompanyName = companyName
+      .toLowerCase()
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+
     const message = `Dear ${name},
 
-Your booking has been successfully confirmed.
-Duration of Stay: ${checkIn.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} to ${checkOut.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} (${totalNights} night(s))
+Your booking at **Kyoto | ${formattedCompanyName}** has been successfully confirmed.
+
+**Duration of Stay:** ${checkIn.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} to ${checkOut.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} (${totalNights} night${totalNights === 1 ? '' : 's'})
 
 Kindly share a valid government-issued ID proof for all guests at your earliest convenience to complete the check-in process.
 
-The check-in details will be shared with you on the day of your check-in.
+The check-in details will be shared with you **on the day of check-in**.
 
 Please feel free to reach out if you have any questions.
 
